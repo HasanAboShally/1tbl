@@ -1,0 +1,177 @@
+@import "../_common.less";
+
+
+html, body {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    z-index: 1;
+    //background: @mainColor;
+    color: white;
+    position: relative;
+    background: #333333;
+    padding: 20px;
+
+    @color1: #000;
+    @color2: #333;
+    .gradient(~"linear-gradient(45deg,@{color1} 0%,@{color2} 150%)");
+
+    &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: url('http://twitter.github.io/bootstrap/assets/img/bs-docs-masthead-pattern.png') repeat center center;
+        opacity: .4;
+        z-index: -1;
+    }
+}
+
+.container {
+    overflow: visible;
+}
+
+.board {
+    padding: 20px;
+    background: fade(white,90%);
+    border: 1px solid #E3E3E3;
+    // width: 250px;
+    display: inline-block;
+    margin-top: 20px;
+    background: white;
+    border: 5px solid @borderColor;
+    .border-radius(5px);
+
+    input {
+        height: 40px;
+    }
+
+        input[type="submit"] {
+            height: 50px;
+            margin-top: 10px;
+        }
+}
+
+#form-login {
+    // height: 280px;
+    position: relative;
+    padding-bottom: 50px;
+}
+
+#logo {
+    display: block;
+    height: 100px;
+    width: auto;
+    margin: 0px auto 30px auto;
+}
+
+
+
+footer {
+    display: none;
+}
+
+
+
+
+/*.board input[type="submit"], input[type="button"] {
+    margin: 15px auto 0px auto;
+    display: block;
+    width: 150px;
+    font-family: tahoma;
+    //background: fade(@mainColor,75%);
+}*/
+
+#form-register {
+    position: relative;
+    padding-top: 50px;
+}
+
+#btn-signup {
+    text-align: center;
+    margin: 0px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    color: gray;
+    font-weight: bold;
+    line-height: 30px;
+    cursor: pointer;
+    .transition(~"background 0.2s ease-in-out");
+
+    &:hover {
+        background: @borderColor;
+    }
+
+    &:active {
+        background: darken(@borderColor,5%);
+    }
+}
+
+
+#btn-back-to-login {
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    color: gray;
+    font-weight: bold;
+    line-height: 30px;
+    cursor: pointer;
+    .transition(~"background 0.2s ease-in-out");
+
+    &:hover {
+        background: @borderColor;
+    }
+
+    &:active {
+        background: darken(@borderColor,5%);
+    }
+}
+
+
+.loading {
+    margin: 0px auto;
+    text-align: center;
+
+    i {
+        font-size: 64px;
+        line-height: 100px;
+        color: gray;
+        color: fade(desaturate(@mainColor,50%),15%);
+    }
+}
+
+
+#site-title {
+   // text-shadow: 2px 2px 2px black;
+    font-size: 32px;
+    letter-spacing: -2px;
+    line-height: 1;
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    font-family: museo-slab,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: gray;
+    display:none;
+}
+
+#site-logo {
+    display: block;
+    margin: 0px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 100%;
+    height: 120px;
+    width: 120px;
+    border: 5px solid #666666;
+    background: #333333;
+    margin-bottom:20px;
+}

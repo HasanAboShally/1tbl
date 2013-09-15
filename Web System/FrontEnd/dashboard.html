@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html ng-app="oneTable">
+<head>
+    <title>1tbl - Dashboard</title>
+
+
+
+
+
+    <!-- CDN-Hosted Javascript libraries (for speed) -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+    <script src="/Scripts/app.js"></script>
+    <script type="text/javascript">
+        $.get(serverWebPath + 'users/isloggedin', function (isLoggedIn) {
+            $('*').addClass('hiddenX');
+
+            if (isLoggedIn)
+                $('*').removeClass('hiddenX');
+            else
+                window.location = "/login.html";
+        });
+    </script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet" />
+
+
+
+    <!-- Metas for mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" sizes="72x72" href="Images/icon.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="Images/icon.png" />
+    <link rel="apple-touch-icon" href="Images/icon.png" />
+    <link rel="apple-touch-startup-image" href="Images/icon.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="width" />
+
+
+    <link href="/Scripts/external/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <script src="/Scripts/external/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+
+
+    <script src="Scripts/external/ng-grid/ng-grid-2.0.6.min.js"></script>
+    <link href="Scripts/external/ng-grid/ng-grid.min.css" rel="stylesheet" />
+
+
+    <link href="/Scripts/external/pnotify/jquery.pnotify.default.css" rel="stylesheet" />
+
+
+    <link href="/Styles/flat-ui.css" rel="stylesheet" type="text/css" />
+    <link href="/Styles/pages/dashboard.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+
+    <header id="header">
+        <img id="site-logo" src="/Images/logo.png" />
+        <label id="site-name">1tbl - Dashboard</label>
+
+        <div id="current-project" ng-controller="CurrentProjectController">
+            <img class="project-icon" ng-src="{{currentProject.iconUrl}}" />
+            <span class="name"><span class="name-text">{{currentProject.name}}</span> <i class="icon-caret-down"></i></span>
+        </div>
+
+        <!--<label id="btn-signout" class="pull-right">Signout</label>-->
+
+        <div id="user-details" ng-controller="userDetailsController" class="dropdown pull-right">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{user.name}} <i class="icon-caret-down"></i></a>
+            <ul class="dropdown-menu">
+                <li class="disabled"><a href="/auth/logout"><i class="icon-cog"></i>Account Settings</a></li>
+                <li style="padding-left:5px; color:gray;">Last Activity:</li>
+                <li><a href="/auth/logout"><i class="icon-time"></i>{{user.lastLogin}}</a></li>
+                <li></li>
+                <li class="divider"></li>
+                <li><a ng-click="signout()"><i class="icon-off"></i>Logout</a></li>
+            </ul>
+        </div>
+
+    </header>
+
+    <div class="container-fluid">
+        <div ng-controller="ProjectsController">
+            <ul id="projects-list" class="row-fluid">
+                <li class="project span2" project-id="{{project.id}}" ng-repeat="project in projects" ng-click="selectProject(project.id)">
+                    <div class="project-icon-wrapper">
+                        <img class="project-icon" ng-src="{{project.iconUrl}}" />
+                    </div>
+                    <div class="project-info">
+                        <label class="name">{{project.name}}</label>
+                    </div>
+                </li>
+
+
+
+                <li id="new-project-btn" class="span1">
+
+
+                    <a href="#new-project-modal" role="button" class="palette palette-emerland input-block-level" data-toggle="modal"><i class="icon-plus"></i></a>
+
+
+                </li>
+
+            </ul>
+
+            <div id="new-project-modal" class="modal hide fade">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>Add new project</h3>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="input-block-level" placeholder="Name" ng-model="newProject.name" />
+                    <textarea maxlength="500" class="input-block-level" placeholder="Description" ng-model="newProject.description"></textarea>
+                    <input type="text" class="input-block-level" placeholder="Icon Url" ng-model="newProject.iconUrl" />
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-success" ng-click="addProject()" data-dismiss="modal">Add</a>
+                    <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+
+        </div>
+        <div class="row-fluid" style="overflow: auto; position: relative;">
+
+
+            <div class="span2" id="sideBar">
+                <div id="current-project-info" ng-controller="CurrentProjectInfoController">
+
+
+
+                    <div ng-hide="isEditMode">
+                        <img class="project-icon" ng-src="{{currentProject.iconUrl}}" />
+                        <label class="project-name">{{currentProject.name}} <i class="icon-edit" title="Edit Project Info" ng-click="toggleEditMode()"></i></label>
+                        <p class="project-description">{{currentProject.description}}</p>
+                    </div>
+
+                    <div ng-show="isEditMode">
+                        <input class="input-block-level" type="text" ng-model="currentProject.iconUrl" />
+                        <input class="input-block-level" type="text" ng-model="currentProject.name" />
+                        <textarea class="input-block-level" ng-model="currentProject.description"></textarea>
+
+                        <div class="container-fluid">
+                            <div class="row-fluid">
+                                <a title="Save Changes" class="btn span12 btn-success" ng-click="updateProject()">Save</a>
+                            </div>
+                            <div class="row-fluid">
+                                <a title="Delete Project" class="btn span6 btn-danger" href="#confirm-project-delete-modal" role="button" data-toggle="modal">Delete</a>
+                                <a title="Cancel" class="btn span6" ng-click="isEditMode=false">Cancel</a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<a role="button" class="btn input-block-level" ng-click="toggleEditMode()" ng-hide="isEditMode" title="Edit">Edit Project Info</a>-->
+
+                    <!--<hr />-->
+
+
+                    <p class="project-token">
+                        Token:<br />
+                        <br />
+                        {{currentProject.token}}
+
+                        <br />
+                        <br />
+                        UserID: {{currentProject.ownerId}}
+                    </p>
+
+                    <!--            <header>Token (Click to copy)</header>
+                    <label class="project-ownerId">User ID: </label>
+                    <p class="project-token" title="Click to copy Token"></p>-->
+
+                    <div id="confirm-project-delete-modal" class="modal hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3>Delete Project</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p class="palette palette-alizarin">This operation can't be undone.</p>
+                            Are you sure you want to delete this project: {{currentProject.name}} ?
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="deleteProject()">Delete</a>
+                            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div ng-controller="TablesController">
+
+
+
+                    <section id="project-tables-list">
+                        <header>Project Tables</header>
+                        <ul>
+                            <li ng-repeat='table in tables' table-name="{{table.name}}" ng-click="selectTable(table.name)">
+
+                                <p>{{table.name}} </p>
+                                <div class="operations">
+                                    <a href="#confirm-table-delete-modal" type="button" class="operation delete" data-toggle="modal" ng-click="setCurrentTableToDelete(table.name);">&times;</a>
+                                    <a href="#update-table-modal" type="button" class="operation edit" data-toggle="modal" ng-click="selectTableForUpdate(table.name);">Edit</a>
+                                </div>
+                            </li>
+
+
+                            <li id="add-new-table-btn"><a href="#new-table-modal" role="button" class="palette palette-emerland input-block-level" data-toggle="modal"><i class="icon-plus"></i></a></li>
+                        </ul>
+                    </section>
+
+                    <div id="new-table-modal" class="modal hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3>Add new table</h3>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="input-block-level" placeholder="Table Name" ng-model="newTable.name" />
+                            <hr />
+
+                            <ul>
+                                <li ng-repeat="column in newTable.columns">
+                                    <input type="text" class="input-block-level" ng-model="column.name" />
+                                </li>
+                            </ul>
+
+                            <form ng-submit="addColumn()">
+                                <input type="text" ng-model="newColumn.name" size="30" class="input-block-level" placeholder="add new column here.." />
+                                <!--<input class="btn-primary" type="submit" value="add" />-->
+                            </form>
+                            <p>Press [Enter] to add new column.</p>
+                        </div>
+
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-success" data-dismiss="modal" ng-click="addTable()">Add Table</a>
+                            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                        </div>
+                    </div>
+
+
+                    <div id="update-table-modal" class="modal hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3>Update Table</h3>
+                            <p class="palette palette-alizarin">Changing the table's name or structure may prevent previous applications using this table from working properly.</p>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="container-fluid">
+                                <div class="row-fluid">
+                                    <div class="span10">
+                                        <input class="input-block-level" type="text" ng-model="currentTable.newName" placeholder="{{currentTable.name}}" />
+                                    </div>
+                                    <div class="span2"><a href="#" class="btn palette-emerland" ng-click="renameCurrentTable()"><i class="icon-white icon-save"></i></a></div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <ul class="columns-list" ng-controller="ColumnsController" class="container-fluid">
+                                <li ng-repeat='column in columns' ng-show="!$first" column-name="{{column.name}}" class="row-fluid">
+                                    <div class="span10">
+                                        <input type="text" ng-model="column.newName" placeholder="{{column.name}}" class="span10" />
+                                    </div>
+                                    <div class="span1"><a href="#" class="btn palette-emerland" ng-click="updateColumn(column.name,column.newName)"><i class="icon-white icon-save"></i></a></div>
+                                    <div class="span1"><a href="#" class="btn palette-alizarin" ng-click="deleteColumn(column.name)"><i class="icon-white icon-trash"></i></a></div>
+                                </li>
+                            </ul>
+
+                            <form ng-submit="addColumnToCurrentTable()">
+                                <input type="text" ng-model="newColumn.name" size="30" class="input-block-level" placeholder="add new column here.." />
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <div id="confirm-table-delete-modal" class="modal hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3>Delete Table</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p class="palette palette-alizarin">This operation can't be undone.</p>
+                            Are you sure you want to delete this table: {{currentTableToDelete}} ?
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-danger" data-dismiss="modal" ng-click="deleteTable()">Delete</a>
+                            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <section class="span10" id="table-area" ng-controller="RowsController" ng-show="currentTableName != null">
+
+                <div class="container-fluid">
+                    <div class="row-fluid" id="rows-toolbar">
+
+                        <div class="span9">
+                            <label id="current-table-name">{{currentProjectName}} <i class="icon-arrow-right icon-large"></i>{{currentTableName}}</label>
+                        </div>
+                        <div class="span3">
+                            <a class="btn btn-large btn-danger pull-right" ng-click="deleteRow()" title="Delete Selected Row"><i class="icon-trash"></i></a>
+                            <a href="#add-rows-modal" role="button" data-toggle="modal" class="btn btn-large btn-success pull-right" title="Add new rows">Add Rows</a>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="gridStyle" ng-grid="gridOptions"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div id="add-rows-modal" class="modal hide fade">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3>Add new table</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form id="div-add-row" ng-submit="addRow()">
+                            <ul>
+                                <li ng-repeat="column in columns" ng-show="!$first">
+                                    <input type="text" class="input-block-level" placeholder="{{column.displayName}}" ng-model="newRow[column.displayName]" />
+                                </li>
+                            </ul>
+                            <input type="submit" class="btn btn-large btn-success" value="Add Row" />
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </section>
+
+            <div id="project-dismisser" style="display: none;"></div>
+
+        </div>
+
+    </div>
+
+
+    <div id="loading-spinner">
+        <div><i class="icon-refresh icon-spin icon-large"></i></div>
+        <!--  icon-spinner icon-adjust icon-refresh icon-cog  -->
+    </div>
+
+    <!-- Other js libraries goes here -->
+
+    <script src="/Scripts/pages/dashboard.js"></script>
+    <script src="/Scripts/controllers/projects.js"></script>
+    <script src="/Scripts/controllers/tables.js"></script>
+    <script src="/Scripts/controllers/columns.js"></script>
+    <script src="/Scripts/controllers/rows.js"></script>
+    <script src="/Scripts/controllers/userDetails.js"></script>
+
+    <script src="/Scripts/external/pnotify/jquery.pnotify.min.js"></script>
+    <script src="/Scripts/lastExecuted.js"></script>
+
+</body>
+</html>

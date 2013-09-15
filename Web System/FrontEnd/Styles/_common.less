@@ -1,0 +1,92 @@
+@import "_lesshat.less";
+
+@defaultPadding: 20px;
+@mainColor:#333333; //#2A75A9; //333333
+
+@borderColor: #e5e5e5;
+@border: 1px solid @borderColor;
+
+@HighlightColor: #FFFBCC;
+
+.patternedBg(@color: white) {
+    background: url('/Styles/Images/patternBg.png') repeat @color;
+}
+
+.btn(@bgColor: gray) {
+    border: 0px;
+    padding: 10px 20px;
+    .border-radius(3px);
+    border: 1px solid darken(@bgColor,5%);
+    .transition(~"background-color 0.2s ease-in-out");
+    background-color: @bgColor;
+
+    &:hover {
+        background-color: darken(@bgColor,10%);
+    }
+
+    &:active {
+        background-color: darken(@bgColor,20%);
+    }
+}
+
+
+html, body {
+    overflow-x: hidden;
+}
+
+body {
+    .patternedBg(white);
+}
+
+.row-block {
+    background: white;
+    padding: @defaultPadding;
+    border-top: @border;
+    border-bottom: @border;
+}
+
+
+label {
+    cursor: default;
+}
+
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+.page {
+    //padding:20px;
+    background: white;
+    border: @border;
+    border-top: none;
+    min-height: 300px;
+}
+
+
+p {
+    line-height: 25px;
+}
+
+
+.loading {
+    display: none;
+}
+
+a, a:hover, a:focus, a:visited {
+    color: white;
+    text-decoration: none!important;
+
+    >i {
+        text-decoration: none!important;
+    }
+}
+
+.hiddenX {
+    display: none;
+}
+
+
+* {
+    outline: 0!important;
+}

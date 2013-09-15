@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>1-TBL -- Login</title>
+
+    <!-- CDN-Hosted Javascript libraries (for speed) -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+    <script src="Scripts/app.js"></script>
+    <script type="text/javascript">
+        $.get(serverWebPath + 'users/isloggedin', function (isLoggedIn) {
+            if (isLoggedIn)
+                window.location = "/dashboard.html";
+        });
+    </script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome-ie7.css" rel="stylesheet" />
+
+
+
+    <link href="Styles/animate.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Metas for mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" sizes="72x72" href="Images/icon.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="Images/icon.png" />
+    <link rel="apple-touch-icon" href="Images/icon.png" />
+    <link rel="apple-touch-startup-image" href="Images/icon.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="width" />
+
+    <link href="/Scripts/external/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <script src="/Scripts/external/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+
+    <link href="/Styles/flat-ui.css" rel="stylesheet" type="text/css" />
+    <link href="/Styles/pages/login.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span4 offset4">
+
+
+
+                <form id="form-login" class="board submitForm" method="post" action="users/login">
+
+                    <img id="site-logo" src="/Images/_logo.png" />
+                    <label id="site-title">1tbl</label>
+
+                    <input class="input-block-level" type="text" id="tb-username" name="username" autocomplete="on" placeholder="Username" />
+                    <input class="input-block-level" type="password" id="tb-password" name="password" placeholder="Password" />
+                    <br />
+
+                    <input type="submit" id="btn-login" class="btn btn-large btn-block btn-success" value="Login" />
+
+                    <label id="btn-signup">Signup Now! (15 Seconds)</label>
+
+                    <div class="loading"><i class="icon-refresh icon-spin"></i></div>
+                </form>
+
+                <form id="form-register" method="post" class="board submitForm" action="users/register">
+                    <i id="btn-back-to-login" class="icon-chevron-up"></i>
+                    <input class="input-block-level" type="text" name="firstname" id="tb-firstname" placeholder="First Name" />
+                    <input class="input-block-level" type="text" name="lastname" id="tb-lastname" placeholder="Last Name" />
+                    <input class="input-block-level" type="text" name="username" id="tb-register-username" placeholder="Username" />
+                    <input class="input-block-level" type="email" name="email" id="tb-email" placeholder="Email" />
+                    <input class="input-block-level" type="password" name="password" id="tb-register-password" placeholder="Password" />
+                    <input type="submit" id="btn-register" class="btn btn-large btn-block btn-inverse" value="Register" />
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+    <script src="/Scripts/app.js"></script>
+    <script src="/Scripts/pages/login.js"></script>
+</body>
+</html>
